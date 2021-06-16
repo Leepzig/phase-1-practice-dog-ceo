@@ -10,13 +10,16 @@ document.addEventListener("DOMContentLoaded", () => {
     .then(data => renderImages(data))
 
   fetch(breedUrl)
-    .then(response => response.json)
+    .then(response => response.json())
     .then(data => {
-      console.log(data)
-      console.log(typeof data)
-      debugger;
+      renderBreeds(data)
+      const select = document.querySelector("select")
+      select.addEventListener("change", (event) => {
+        renderBreeds(data)
+      })
     })
 
+  
 })
 
 const renderImages = (json) => {
@@ -28,17 +31,20 @@ const renderImages = (json) => {
   })
 }
 
-const renderAllBreeds = (json) => {
+const renderBreeds = (json) => {
   const dogBreeds = document.querySelector("#dog-breeds")
+  const letter = document.querySelector("select").value
+  dogBreeds.innerHTML = ""
   for (const breed in json.message) {
-    const li = document.createElement("li")
-    li.innerText = breed
-    dogBreeds.appendChild(li)
-
+    if (breed[0] === letter){
+      const li = document.createElement("li")
+      li.innerText = breed
+      li.addEventListener("click",changeColor )
+      dogBreeds.appendChild(li)
+    }
   }
 }
 
-
-// fetch(breedUrl)
-// .then(response => response.json)
-// .then(data => console.log(data))
+const changeColor = (event) => {
+  event.target.style.backgroundColor = "red"
+}
